@@ -1,31 +1,35 @@
 package com.rs.findyourpet.dto.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 import org.hibernate.validator.constraints.br.CPF;
-import org.springframework.format.annotation.NumberFormat;
 
 @Getter
 @NoArgsConstructor
-public class OrganizationRequest {// TODO: create logo field, add bean validation, add internacionalization
+public class OrganizationRequest {// TODO: create logo field
 
-    @NotBlank
+    @NotBlank(message = "{400.006}")
     private String name;
 
-    @CPF
+    @CPF(message = "{400.007}")
     private String responsibleDocument;
 
-    @Size(max = 255)
+    @Size(max = 255, message = "{400.008}")
     private String description;
 
-    @URL
+    @URL(message = "{400.009}")
     private String instagramUrl;
 
-    @NumberFormat
+    @Pattern(regexp = "^s*(\\d{2}|\\d{0})[-. ]?(\\d{5}|\\d{4})[-. ]?(\\d{4})[-. ]?\\s*$", message = "{400.010}")
     private String whatsAppNumber;
 
+    @Valid
+    @NotNull(message = "{400.011}")
     private AddressRequest address;
 }

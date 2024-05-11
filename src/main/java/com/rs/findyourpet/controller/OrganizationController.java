@@ -8,6 +8,7 @@ import com.rs.findyourpet.converter.OrganizationConverter;
 import com.rs.findyourpet.dto.request.OrganizationRequest;
 import com.rs.findyourpet.dto.response.OrganizationResponse;
 import com.rs.findyourpet.service.OrganizationService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +36,7 @@ public class OrganizationController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    public OrganizationResponse createOrganization(@RequestBody OrganizationRequest organizationRequest) { // TODO: use spring security
+    public OrganizationResponse createOrganization(@RequestBody @Valid OrganizationRequest organizationRequest) { // TODO: use spring security
         var organization = fromRequest(organizationRequest);
 
         var saved = organizationService.save(organization); // TODO: add logs

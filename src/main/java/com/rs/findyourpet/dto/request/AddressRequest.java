@@ -8,18 +8,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddressRequest { // TODO: use zip code api
 
-    @NotBlank
+    @NotBlank(message = "{400.001}")
     private String street;
 
-    @NotBlank
+    @NotBlank(message = "{400.002}")
     private String number;
 
-    @NotBlank
+    @NotBlank(message = "{400.003}")
     private String neighborhood;
 
-    @NotBlank
+    @NotBlank(message = "{400.004}")
     private String city;
 
-    @NotBlank
+    @NotBlank(message = "{400.005}")
     private String zipCode;
 }
