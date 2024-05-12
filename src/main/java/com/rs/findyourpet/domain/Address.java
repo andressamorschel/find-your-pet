@@ -37,7 +37,7 @@ public class Address { // TODO: use records
     @Column(name = "city")
     private String city;
 
-    @Column(name = "zip-code")
+    @Column(name = "zip_code")
     private String zipCode;
 
     @OneToOne(mappedBy = "address")
