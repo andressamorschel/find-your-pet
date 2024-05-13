@@ -2,6 +2,7 @@ package com.rs.findyourpet.domain;
 
 import static jakarta.persistence.EnumType.STRING;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rs.findyourpet.domain.enumerated.PetSex;
 import com.rs.findyourpet.domain.enumerated.PetSize;
 import com.rs.findyourpet.domain.enumerated.PetType;
@@ -14,13 +15,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
 @Entity
 @Table(name = "pet")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Pet {
 
     @Id
@@ -57,4 +62,9 @@ public class Pet {
     @ManyToOne
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
+
+    @JsonBackReference
+    public Organization getOrganization() {
+        return organization;
+    }
 }

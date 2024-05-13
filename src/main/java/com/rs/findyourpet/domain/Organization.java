@@ -2,6 +2,7 @@ package com.rs.findyourpet.domain;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,4 +52,9 @@ public class Organization {
 
     @OneToMany(mappedBy = "organization")
     private List<Pet> pets;
+
+    @JsonManagedReference
+    public List<Pet> getPets() {
+        return pets;
+    }
 }

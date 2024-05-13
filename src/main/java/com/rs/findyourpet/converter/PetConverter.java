@@ -6,6 +6,7 @@ import com.rs.findyourpet.domain.Organization;
 import com.rs.findyourpet.domain.Pet;
 import com.rs.findyourpet.dto.request.PetRequest;
 import com.rs.findyourpet.dto.response.PetResponse;
+import java.util.List;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -36,5 +37,11 @@ public class PetConverter {
                 .size(pet.getSize())
                 .organizationDetails(fromOrganizationToResponse(pet.getOrganization()))
                 .build();
+    }
+
+    public static List<PetResponse> fromPetToResponse(List<Pet> pets) {
+        return pets.stream()
+                .map(PetConverter::fromPetToResponse)
+                .toList();
     }
 }
