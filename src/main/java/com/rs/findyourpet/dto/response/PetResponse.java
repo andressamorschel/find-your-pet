@@ -1,8 +1,10 @@
 package com.rs.findyourpet.dto.response;
 
+import com.rs.findyourpet.domain.Image;
 import com.rs.findyourpet.domain.enumerated.PetSex;
 import com.rs.findyourpet.domain.enumerated.PetSize;
 import com.rs.findyourpet.domain.enumerated.PetType;
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -29,4 +31,6 @@ public class PetResponse {
     private String description;
 
     private OrganizationResponse organizationDetails;
+
+    private List<ImageResponse> images;
 }

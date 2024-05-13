@@ -2,20 +2,21 @@ package com.rs.findyourpet.controller;
 
 import static com.rs.findyourpet.converter.ImageConverter.fromMultipartFile;
 import static javax.security.auth.callback.ConfirmationCallback.OK;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.valueOf;
 
-import com.rs.findyourpet.domain.Image;
 import com.rs.findyourpet.service.ImageService;
+import com.rs.findyourpet.service.PetService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,9 +27,16 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    @PostMapping
-    public void uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
-        imageService.uploadImage(fromMultipartFile(file));
+    private final PetService petService;
+
+    @PostMapping("/{petId}")
+    @ResponseStatus(CREATED)
+    public void uploadImage(@PathVariable long petId, @RequestParam("image") MultipartFile file) throws IOException {
+        var pet = petService.findById(petId);
+
+        var imageToSave = fromMultipartFile(file, pet);
+
+        imageService.uploadImage(imageToSave);
     }
 
     @GetMapping("/{name}")
