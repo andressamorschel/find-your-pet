@@ -8,7 +8,7 @@ public class ImageUtils {
 
     public class ImageUtil {
 
-        public static byte[] compressImage(byte[] data) {
+        public static byte[] compressImage(byte[] data) { // TODO: improve this class
             Deflater deflater = new Deflater();
             deflater.setLevel(Deflater.BEST_COMPRESSION);
             deflater.setInput(data);
