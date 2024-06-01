@@ -1,6 +1,6 @@
 package com.rs.findyourpet.converter;
 
-import static com.rs.findyourpet.converter.ImageConverter.fromImageToResponse;
+import static com.rs.findyourpet.converter.ImageConverter.fromImagesToResponse;
 import static com.rs.findyourpet.converter.OrganizationConverter.fromOrganizationToResponse;
 
 import com.rs.findyourpet.domain.Organization;
@@ -36,7 +36,7 @@ public class PetConverter {
                 .type(pet.getType())
                 .sex(pet.getSex())
                 .size(pet.getSize())
-                .images(fromImageToResponse(pet.getImages()))
+                .images(ImageConverter.fromImagesToResponse(pet.getImages()))
                 .organizationDetails(fromOrganizationToResponse(pet.getOrganization()))
                 .build();
     }

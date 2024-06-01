@@ -1,9 +1,10 @@
 package com.rs.findyourpet.converter;
 
+import static com.rs.findyourpet.utils.ImageUtils.ImageUtil.compressImage;
+
 import com.rs.findyourpet.domain.Image;
 import com.rs.findyourpet.domain.Pet;
 import com.rs.findyourpet.dto.response.ImageResponse;
-import com.rs.findyourpet.utils.ImageUtils.ImageUtil;
 import java.io.IOException;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -17,11 +18,11 @@ public class ImageConverter {
                 .name(file.getOriginalFilename())
                 .type(file.getContentType())
                 .pet(pet)
-                .imageData(ImageUtil.compressImage(file.getBytes()))
+                .imageData(compressImage(file.getBytes()))
                 .build();
     }
 
-    public static ImageResponse fromImageToResponse(Image image) {
+    public static ImageResponse fromImagesToResponse(Image image) {
         return ImageResponse.builder()
                 .name(image.getName())
                 .type(image.getType())
@@ -29,9 +30,9 @@ public class ImageConverter {
                 .build();
     }
 
-    public static List<ImageResponse> fromImageToResponse(List<Image> images) {
+    public static List<ImageResponse> fromImagesToResponse(List<Image> images) {
         return images.stream()
-                .map(ImageConverter::fromImageToResponse)
+                .map(ImageConverter::fromImagesToResponse)
                 .toList();
     }
 }
