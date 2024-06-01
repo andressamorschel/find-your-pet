@@ -17,3 +17,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+api:
+  zipcode:
+    key: 01HXQHT3F253CD4BK48CF2C2Y9
+    url: https://api.zipcodestack.com/v1/search
