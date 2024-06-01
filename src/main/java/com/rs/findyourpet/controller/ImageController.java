@@ -9,7 +9,6 @@ import com.rs.findyourpet.service.ImageService;
 import com.rs.findyourpet.service.PetService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,7 +40,7 @@ public class ImageController {
 
     @GetMapping("/{name}")
     public ResponseEntity<byte[]> getImageByName(@PathVariable("name") String name) {
-        var image = imageService.getImage(name);
+        var image = imageService.getDecompressedImage(name);
 
         return ResponseEntity.status(OK)
                 .contentType(valueOf("image/png"))
