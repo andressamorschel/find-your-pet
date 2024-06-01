@@ -39,7 +39,7 @@ public class PetService {
     public Pet editPet(long petId, PetRequest request) {
         var pet = findById(petId);
 
-        var editedOrganization = buildEditedOrganization(pet, request, petId);
+        var editedOrganization = buildEditedPet(pet, request, petId);
 
         return petRepository.save(editedOrganization);
     }
@@ -48,7 +48,7 @@ public class PetService {
         petRepository.deleteById(petId);
     }
 
-    private Pet buildEditedOrganization(Pet pet, PetRequest request, long petId) {
+    private Pet buildEditedPet(Pet pet, PetRequest request, long petId) {
         return pet.toBuilder()
                 .id(petId)
                 .color(request.getColor())
