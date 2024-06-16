@@ -25,4 +25,6 @@ public class PetRequest { // TODO: add validations
     private boolean isNeutered;
 
     private String description;
+
+    private int age;
 }
