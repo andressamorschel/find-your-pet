@@ -1,7 +1,6 @@
 package com.findyourpet.converter;
 
 import static com.findyourpet.converter.ImageConverter.fromImagesToResponse;
-import static com.findyourpet.converter.OrganizationConverter.fromOrganizationToResponse;
 
 import com.findyourpet.domain.Organization;
 import com.findyourpet.domain.Pet;

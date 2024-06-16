@@ -33,7 +33,7 @@ public class OrganizationConverter {
                 .build();
     }
 
-    public static List<OrganizationResponse> fromOrganizationToResponse(List<Organization> organizations) {
+    public static List<OrganizationResponse> fromOrganizationsToResponse(List<Organization> organizations) {
         return organizations.stream()
                 .map(OrganizationConverter::fromOrganizationToResponse)
                 .toList();

@@ -5,6 +5,7 @@ import static com.findyourpet.converter.OrganizationConverter.fromRequest;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
+import com.findyourpet.converter.OrganizationConverter;
 import com.findyourpet.dto.request.OrganizationRequest;
 import com.findyourpet.dto.response.OrganizationResponse;
 import com.findyourpet.service.OrganizationService;
@@ -34,7 +35,7 @@ public class OrganizationController { // TODO: use spring security
     public List<OrganizationResponse> findOrganizations() {
         var organizations = organizationService.find();
 
-        return fromOrganizationToResponse(organizations);
+        return OrganizationConverter.fromOrganizationsToResponse(organizations);
     }
 
     @PostMapping
