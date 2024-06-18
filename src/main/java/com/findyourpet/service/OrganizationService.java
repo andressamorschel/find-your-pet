@@ -22,7 +22,7 @@ public class OrganizationService {
 
     public Organization findById(long id) {
         return organizationRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("400.012", Long.toString(id)));
+                .orElseThrow(() -> new NotFoundException("resource_not_found", "organization"));
     }
 
     public Organization save(Organization organization) {

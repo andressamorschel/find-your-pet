@@ -16,9 +16,9 @@ import org.hibernate.validator.constraints.br.CPF;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrganizationRequest {// TODO: create logo field
+public class OrganizationRequest {
 
-    @NotBlank(message = "{400.006}")
+    @NotBlank(message = "{400.006}}")
     private String name;
 
     @CPF(message = "{400.007}")

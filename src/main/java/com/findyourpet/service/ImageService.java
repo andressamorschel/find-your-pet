@@ -27,7 +27,7 @@ public class ImageService {
 
     private Image getImaqe(String imageName) {
         return imageRepository.findByName(imageName)
-                .orElseThrow(() -> new NotFoundException("400.017", imageName));
+                .orElseThrow(() -> new NotFoundException("resource_not_found", "image"));
     }
 
 }

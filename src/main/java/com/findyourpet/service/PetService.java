@@ -1,10 +1,10 @@
 package com.findyourpet.service;
 
 import com.findyourpet.domain.Pet;
+import com.findyourpet.dto.request.PetRequest;
 import com.findyourpet.exceptions.NotFoundException;
 import com.findyourpet.repository.PetRepository;
 import com.findyourpet.repository.PetSpecification;
-import com.findyourpet.dto.request.PetRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class PetService {
 
     public Pet findById(long petId) {
         return petRepository.findById(petId)
-                .orElseThrow(() -> new NotFoundException("400.013", Long.toString(petId)));
+                .orElseThrow(() -> new NotFoundException("resource_not_found", "pet"));
     }
 
     public Pet editPet(long petId, PetRequest request) {
