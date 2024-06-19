@@ -1,7 +1,5 @@
 package com.findyourpet.controller;
 
-import static com.findyourpet.converter.OrganizationConverter.fromOrganizationToResponse;
-import static com.findyourpet.converter.OrganizationConverter.fromRequest;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -31,33 +29,35 @@ public class OrganizationController { // TODO: use spring security
 
     private final OrganizationService organizationService;
 
+    private final OrganizationConverter organizationConverter;
+
     @GetMapping
     public List<OrganizationResponse> findOrganizations() {
         var organizations = organizationService.find();
 
-        return OrganizationConverter.fromOrganizationsToResponse(organizations);
+        return organizationConverter.fromOrganizationsToResponse(organizations);
     }
 
     @PostMapping
     @ResponseStatus(CREATED)
     public OrganizationResponse createOrganization(@RequestBody @Valid OrganizationRequest organizationRequest) {
-        var organization = fromRequest(organizationRequest);
+        var organization = organizationConverter.fromRequest(organizationRequest);
 
         var saved = organizationService.save(organization);
 
-        return fromOrganizationToResponse(saved);
+        return organizationConverter.fromOrganizationToResponse(saved);
     }
 
     @PutMapping("/{organizationId}")
-    public OrganizationResponse editOrganization(@RequestBody @Valid OrganizationRequest organizationRequest, @PathVariable long organizationId) {
+    public OrganizationResponse editOrganization(@RequestBody @Valid OrganizationRequest organizationRequest, @PathVariable String organizationId) {
         var editedOrganization = organizationService.editOrganization(organizationId, organizationRequest);
 
-        return fromOrganizationToResponse(editedOrganization);
+        return organizationConverter.fromOrganizationToResponse(editedOrganization);
     }
 
     @DeleteMapping("/{organizationId}")
     @ResponseStatus(NO_CONTENT)
-    public void deleteOrganization(@PathVariable long organizationId) {
+    public void deleteOrganization(@PathVariable String organizationId) {
         organizationService.deleteOrganization(organizationId);
     }
 }

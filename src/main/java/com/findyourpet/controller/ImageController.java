@@ -5,8 +5,8 @@ import static javax.security.auth.callback.ConfirmationCallback.OK;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.valueOf;
 
-import com.findyourpet.service.PetService;
 import com.findyourpet.service.ImageService;
+import com.findyourpet.service.PetService;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +30,8 @@ public class ImageController {
 
     @PostMapping("/{petId}")
     @ResponseStatus(CREATED)
-    public void uploadImage(@PathVariable long petId, @RequestParam("image") MultipartFile file) throws IOException {
-        var pet = petService.findById(petId);
-
-        var imageToSave = fromMultipartFile(file, pet);
+    public void uploadImage(@PathVariable String petId, @RequestParam("image") MultipartFile file) throws IOException {
+        var imageToSave = fromMultipartFile(file, petId);
 
         imageService.uploadImage(imageToSave);
     }

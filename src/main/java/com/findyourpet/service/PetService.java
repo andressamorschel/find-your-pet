@@ -1,10 +1,11 @@
 package com.findyourpet.service;
 
 import com.findyourpet.domain.Pet;
+import com.findyourpet.domain.PetQuery;
 import com.findyourpet.dto.request.PetRequest;
 import com.findyourpet.exceptions.NotFoundException;
 import com.findyourpet.repository.PetRepository;
-import com.findyourpet.repository.PetSpecification;
+import com.findyourpet.repository.pet.PetQueryRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,28 +16,22 @@ public class PetService {
 
     private final PetRepository petRepository;
 
+    private final PetQueryRepository petQueryRepository;
+
     public Pet save(Pet pet) {
         return petRepository.save(pet);
     }
 
-    public List<Pet> findPets(String city, String petType, String size, String sex, String color) {
-        var petSpecification = PetSpecification.builder()
-                .city(city)
-                .color(color)
-                .petType(petType)
-                .size(size)
-                .sex(sex)
-                .build();
-
-        return petRepository.findAll(petSpecification);
+    public List<Pet> findPets(PetQuery petQuery) {
+        return petQueryRepository.findPets(petQuery);
     }
 
-    public Pet findById(long petId) {
+    public Pet findById(String petId) {
         return petRepository.findById(petId)
                 .orElseThrow(() -> new NotFoundException("resource_not_found", "pet"));
     }
 
-    public Pet editPet(long petId, PetRequest request) {
+    public Pet editPet(String petId, PetRequest request) {
         var pet = findById(petId);
 
         var editedOrganization = buildEditedPet(pet, request, petId);
@@ -44,18 +39,19 @@ public class PetService {
         return petRepository.save(editedOrganization);
     }
 
-    public void deletePet(long petId) {
+    public void deletePet(String petId) {
         petRepository.deleteById(petId);
     }
 
-    private Pet buildEditedPet(Pet pet, PetRequest request, long petId) {
+    private Pet buildEditedPet(Pet pet, PetRequest request, String petId) {
+        pet.setId(petId);
         return pet.toBuilder()
-                .id(petId)
                 .color(request.getColor())
                 .description(request.getDescription())
                 .neutered(request.isNeutered())
                 .type(request.getType())
                 .sex(request.getSex())
+                .age(request.getAge())
                 .size(request.getSize())
                 .build();
     }

@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.findyourpet.domain.Image;
-import com.findyourpet.repository.ImageRepository;
+import com.findyourpet.repository.pet.ImageRepository;
 import java.util.Optional;
 import java.util.Random;
 import org.junit.jupiter.api.Test;

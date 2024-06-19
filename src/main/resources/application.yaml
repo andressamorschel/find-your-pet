@@ -5,18 +5,11 @@ spring:
       max-file-size: 200MB
       max-request-size: 215MB
       enabled: true
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    username: root
-    password: root
-    url: jdbc:mysql://localhost:3307/findYourPetDb?createDatabaseIfNotExist=true
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: testdb
 api:
   zipcode:
     key: 01HXQHT3F253CD4BK48CF2C2Y9

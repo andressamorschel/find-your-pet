@@ -7,12 +7,13 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import com.findyourpet.domain.Organization;
+import com.findyourpet.dto.request.AddressRequest;
 import com.findyourpet.dto.request.OrganizationRequest;
 import com.findyourpet.exceptions.NotFoundException;
 import com.findyourpet.repository.OrganizationRepository;
-import com.findyourpet.dto.request.AddressRequest;
 import java.util.List;
 import java.util.Optional;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,11 +36,11 @@ class OrganizationServiceTest {
     @Captor
     private ArgumentCaptor<Organization> organizationCaptor;
 
-    private long organizationId;
+    private String organizationId;
 
     @BeforeEach
     public void setUp() {
-        organizationId = 1L;
+        organizationId = new ObjectId().toString();
     }
 
     @Test

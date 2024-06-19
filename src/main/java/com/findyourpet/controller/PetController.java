@@ -1,9 +1,9 @@
 package com.findyourpet.controller;
 
-import static com.findyourpet.converter.PetConverter.fromPetToResponse;
 import static com.findyourpet.converter.PetConverter.fromRequest;
 
-import com.findyourpet.service.OrganizationService;
+import com.findyourpet.converter.PetConverter;
+import com.findyourpet.converter.PetQueryConverter;
 import com.findyourpet.dto.request.PetRequest;
 import com.findyourpet.dto.response.PetResponse;
 import com.findyourpet.service.PetService;
@@ -31,38 +31,39 @@ public class PetController {
 
     private final PetService petService;
 
-    private final OrganizationService organizationService;
+    private final PetConverter petConverter;
+
+    private final PetQueryConverter petQueryConverter;
 
     @PostMapping("/{organizationId}")
     @ResponseStatus(HttpStatus.CREATED)
-    public PetResponse createPet(@PathVariable long organizationId,
+    public PetResponse createPet(@PathVariable String organizationId,
                                  @RequestBody @Valid PetRequest petRequest) {
-        var organization = organizationService.findById(organizationId);
+        var savedPet = petService.save(fromRequest(petRequest, organizationId));
 
-        var savedPet = petService.save(fromRequest(petRequest, organization));
-
-        return fromPetToResponse(savedPet);
+        return petConverter.fromPetToResponse(savedPet);
     }
 
     @GetMapping
     public List<PetResponse> findPets(@RequestParam(required = false) String city, @RequestParam(required = false) String petType,
                                       @RequestParam(required = false) String size, @RequestParam(required = false) String sex,
-                                      @RequestParam(required = false) String color) {
-        var pets = petService.findPets(city, petType, size, sex, color);
+                                      @RequestParam(required = false) String color, @RequestParam(required = false) String organizationId) {
+        var petQuery = petQueryConverter.buildPetQuery(city, petType, size, sex, color, organizationId);
+        var pets = petService.findPets(petQuery);
 
-        return fromPetToResponse(pets);
+        return petConverter.fromPetToResponse(pets);
     }
 
     @PutMapping("/{petId}")
-    public PetResponse editPet(@PathVariable long petId, @RequestBody @Valid PetRequest petRequest) {
+    public PetResponse editPet(@PathVariable String petId, @RequestBody @Valid PetRequest petRequest) {
         var updated = petService.editPet(petId, petRequest);
 
-        return fromPetToResponse(updated);
+        return petConverter.fromPetToResponse(updated);
     }
 
     @DeleteMapping("/{petId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePet(@PathVariable long petId) {
+    public void deletePet(@PathVariable String petId) {
         petService.deletePet(petId);
     }
 }

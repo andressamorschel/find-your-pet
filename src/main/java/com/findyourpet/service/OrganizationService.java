@@ -20,7 +20,7 @@ public class OrganizationService {
         return organizationRepository.findAll();
     }
 
-    public Organization findById(long id) {
+    public Organization findById(String id) {
         return organizationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("resource_not_found", "organization"));
     }
@@ -29,21 +29,22 @@ public class OrganizationService {
         return organizationRepository.save(organization);
     }
 
-    public Organization editOrganization(long organizationId, OrganizationRequest request) {
+    public Organization editOrganization(String organizationId, OrganizationRequest request) {
         var organization = findById(organizationId);
 
-        var editedOrganization = buildEditedOrganization(organization, request, organizationId);
+        organization.setId(organizationId);
+
+        var editedOrganization = buildEditedOrganization(organization, request);
 
         return organizationRepository.save(editedOrganization);
     }
 
-    public void deleteOrganization(long organizationId) {
+    public void deleteOrganization(String organizationId) {
         organizationRepository.deleteById(organizationId);
     }
 
-    private Organization buildEditedOrganization(Organization organization, OrganizationRequest request, long organizationId) {
+    private Organization buildEditedOrganization(Organization organization, OrganizationRequest request) {
         return organization.toBuilder()
-                .id(organizationId)
                 .address(fromAddressRequest(request.getAddress()))
                 .description(request.getDescription())
                 .instagramUrl(request.getInstagramUrl())

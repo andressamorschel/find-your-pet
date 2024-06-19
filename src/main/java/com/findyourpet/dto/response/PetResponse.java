@@ -11,7 +11,7 @@ import lombok.Getter;
 @Builder
 public class PetResponse {
 
-    private Long id;
+    private String id;
 
     private String color;
 

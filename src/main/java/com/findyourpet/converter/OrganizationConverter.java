@@ -1,5 +1,8 @@
 package com.findyourpet.converter;
 
+import static com.findyourpet.converter.AddressConverter.fromAddressRequest;
+import static com.findyourpet.converter.AddressConverter.fromAddressToResponse;
+
 import com.findyourpet.domain.Organization;
 import com.findyourpet.dto.request.OrganizationRequest;
 import com.findyourpet.dto.response.OrganizationResponse;
@@ -9,19 +12,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrganizationConverter {
 
-    public static Organization fromRequest(OrganizationRequest request) {
+    public Organization fromRequest(OrganizationRequest request) {
         return Organization.builder()
                 .description(request.getDescription())
                 .instagramUrl(request.getInstagramUrl())
                 .responsibleDocument(request.getResponsibleDocument())
                 .whatsAppNumber(request.getWhatsAppNumber())
                 .name(request.getName())
-                .address(AddressConverter.fromAddressRequest(request.getAddress()))
+                .address(fromAddressRequest(request.getAddress()))
                 .build();
     }
 
-    public static OrganizationResponse fromOrganizationToResponse(Organization organization) {
-        var address = AddressConverter.fromAddressToResponse(organization.getAddress());
+    public OrganizationResponse fromOrganizationToResponse(Organization organization) {
+        var address = fromAddressToResponse(organization.getAddress());
         return OrganizationResponse.builder()
                 .description(organization.getDescription())
                 .id(organization.getId())
@@ -33,9 +36,9 @@ public class OrganizationConverter {
                 .build();
     }
 
-    public static List<OrganizationResponse> fromOrganizationsToResponse(List<Organization> organizations) {
+    public List<OrganizationResponse> fromOrganizationsToResponse(List<Organization> organizations) {
         return organizations.stream()
-                .map(OrganizationConverter::fromOrganizationToResponse)
+                .map(this::fromOrganizationToResponse)
                 .toList();
     }
 }

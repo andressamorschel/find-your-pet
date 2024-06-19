@@ -1,65 +1,77 @@
 package com.findyourpet.converter;
 
-import static com.findyourpet.converter.PetConverter.fromPetToResponse;
 import static com.findyourpet.converter.PetConverter.fromRequest;
 import static com.findyourpet.domain.enumerated.PetSex.FEMALE;
 import static com.findyourpet.domain.enumerated.PetSex.MALE;
 import static com.findyourpet.domain.enumerated.PetSize.MEDIUM;
 import static com.findyourpet.domain.enumerated.PetType.CAT;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-import com.findyourpet.domain.Address;
+import com.findyourpet.domain.Image;
 import com.findyourpet.domain.Organization;
 import com.findyourpet.domain.Pet;
 import com.findyourpet.dto.request.PetRequest;
+import com.findyourpet.dto.response.OrganizationResponse;
+import com.findyourpet.service.ImageService;
+import com.findyourpet.service.OrganizationService;
+import java.util.List;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class PetConverterTest {
 
+    @Mock
+    private OrganizationService organizationService;
+
+    @Mock
+    private OrganizationConverter organizationConverter;
+
+    @Mock
+    private ImageService imageService;
+
+    @InjectMocks
+    private PetConverter petConverter;
+
     private Pet pet;
+
+    private String petId;
+
+    private Organization organization;
+
+    private String organizationId;
 
     @BeforeEach
     public void setUp() {
-        var address = Address.builder()
-                .id(123L)
-                .city("Campo Bom")
-                .neighborhood("Centro")
-                .number("1998")
-                .zipCode("93700000")
-                .street("Av. dos Estados")
-                .build();
-
-        var organization = Organization.builder()
-                .id(9L)
-                .address(address)
-                .description("organization description")
-                .instagramUrl("https://instagram.com/account")
-                .responsibleDocument("08765432109")
-                .whatsAppNumber("(51) 987654321")
-                .build();
-
+        organizationId = new ObjectId().toString();
+        organization = mock(Organization.class);
         pet = Pet.builder()
                 .color("black")
                 .description("pet description")
-                .id(1L)
                 .needATemporaryHome(true)
                 .neutered(true)
                 .type(CAT)
                 .sex(MALE)
                 .size(MEDIUM)
-                .organization(organization)
+                .organizationId(organizationId)
                 .age(2)
                 .build();
+        pet.setId(petId);
     }
 
     @Test
     void shouldFromPetToResponseSuccessfully() {
-        var response = fromPetToResponse(pet);
+        given(imageService.getImaqeByPet(petId)).willReturn(List.of(new Image()));
+        given(organizationService.findById(organizationId)).willReturn(organization);
+        given(organizationConverter.fromOrganizationToResponse(organization)).willReturn(new OrganizationResponse());
+        var response = petConverter.fromPetToResponse(pet);
 
         assertThat(response.getAge()).isEqualTo(2);
         assertThat(response.getColor()).isEqualTo("black");
@@ -72,7 +84,7 @@ class PetConverterTest {
 
     @Test
     void shouldFromRequestSuccessfully() {
-        var organization = mock(Organization.class);
+        var organizationId = "organization-id";
         var petRequest = PetRequest.builder()
                 .color("white")
                 .description("white cat")
@@ -83,10 +95,10 @@ class PetConverterTest {
                 .size(MEDIUM)
                 .build();
 
-        var response = fromRequest(petRequest, organization);
+        var response = fromRequest(petRequest, organizationId);
 
         assertThat(response.getAge()).isEqualTo(1);
-        assertThat(response.getOrganization()).isEqualTo(organization);
+        assertThat(response.getOrganizationId()).isEqualTo(organizationId);
         assertThat(response.getColor()).isEqualTo("white");
         assertThat(response.isNeutered()).isTrue();
         assertThat(response.getType()).isEqualTo(CAT);

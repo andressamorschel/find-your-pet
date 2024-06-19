@@ -9,13 +9,15 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import com.findyourpet.exceptions.NotFoundException;
 import com.findyourpet.domain.Pet;
+import com.findyourpet.domain.PetQuery;
 import com.findyourpet.dto.request.PetRequest;
+import com.findyourpet.exceptions.NotFoundException;
 import com.findyourpet.repository.PetRepository;
-import com.findyourpet.repository.PetSpecification;
+import com.findyourpet.repository.pet.PetQueryRepository;
 import java.util.List;
 import java.util.Optional;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,20 +33,20 @@ class PetServiceTest {
     @Mock
     private PetRepository petRepository;
 
+    @Mock
+    private PetQueryRepository petQueryRepository;
+
     @InjectMocks
     private PetService petService;
 
     @Captor
-    private ArgumentCaptor<PetSpecification> petSpecificationCaptor;
-
-    @Captor
     private ArgumentCaptor<Pet> petCaptor;
 
-    private long petId;
+    private String petId;
 
     @BeforeEach
     public void setUp() {
-        petId = 2L;
+        petId = new ObjectId().toString();
     }
 
     @Test
@@ -60,18 +62,13 @@ class PetServiceTest {
 
     @Test
     void shouldFindPetsSuccessfully() {
-        var city = "Porto Alegre";
-        var size = "P";
-        var petType = "cat";
-        var color = "white";
-        var sex = "male";
+        var petQuery = mock(PetQuery.class);
 
-        given(petRepository.findAll(petSpecificationCaptor.capture())).willReturn(List.of(new Pet()));
+        given(petQueryRepository.findPets(petQuery)).willReturn(List.of(new Pet()));
 
-        var response = petService.findPets(city, petType, size, sex, color);
+        var response = petService.findPets(petQuery);
 
         assertThat(response).isNotEmpty();
-        verify(petRepository).findAll(petSpecificationCaptor.capture());
     }
 
     @Test
@@ -103,6 +100,7 @@ class PetServiceTest {
                 .type(CAT)
                 .sex(FEMALE)
                 .size(MEDIUM)
+                .age(10)
                 .build();
         given(petRepository.findById(petId)).willReturn(Optional.of(new Pet()));
         given(petRepository.save(petCaptor.capture())).willReturn(new Pet());
@@ -115,6 +113,12 @@ class PetServiceTest {
 
         var captorValue = petCaptor.getValue();
 
-//        assertThat(captorValue.getAge())
+        assertThat(captorValue.getAge()).isEqualTo(10);
+        assertThat(captorValue.getSize()).isEqualTo(MEDIUM);
+        assertThat(captorValue.getSex()).isEqualTo(FEMALE);
+        assertThat(captorValue.getType()).isEqualTo(CAT);
+        assertThat(captorValue.isNeutered()).isTrue();
+        assertThat(captorValue.getDescription()).isEqualTo("white cat");
+        assertThat(captorValue.getColor()).isEqualTo("white");
     }
 }

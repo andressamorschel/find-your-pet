@@ -1,8 +1,5 @@
 package com.findyourpet.converter;
 
-import static com.findyourpet.converter.OrganizationConverter.fromOrganizationToResponse;
-import static com.findyourpet.converter.OrganizationConverter.fromOrganizationsToResponse;
-import static com.findyourpet.converter.OrganizationConverter.fromRequest;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 import com.findyourpet.domain.Address;
@@ -18,6 +15,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class OrganizationConverterTest {
 
+    private final OrganizationConverter organizationConverter = new OrganizationConverter();
+
     private Organization organization;
 
     private Address address;
@@ -25,7 +24,6 @@ class OrganizationConverterTest {
     @BeforeEach
     public void setUp() {
         address = Address.builder()
-                .id(123L)
                 .city("Campo Bom")
                 .neighborhood("Centro")
                 .number("1998")
@@ -34,7 +32,6 @@ class OrganizationConverterTest {
                 .build();
 
         organization = Organization.builder()
-                .id(9L)
                 .address(address)
                 .description("organization description")
                 .instagramUrl("https://instagram.com/account")
@@ -61,7 +58,7 @@ class OrganizationConverterTest {
                 .whatsAppNumber("(51) 987654321")
                 .build();
 
-        var response = fromRequest(organizationRequest);
+        var response = organizationConverter.fromRequest(organizationRequest);
 
         assertThat(response.getDescription()).isEqualTo("organization description");
         assertThat(response.getInstagramUrl()).isEqualTo("https://instagram.com/account");
@@ -79,7 +76,7 @@ class OrganizationConverterTest {
 
     @Test
     void shouldFromOrganizationToResponseSuccessfully() {
-        var response = fromOrganizationToResponse(organization);
+        var response = organizationConverter.fromOrganizationToResponse(organization);
 
         assertThat(response.getDescription()).isEqualTo("organization description");
         assertThat(response.getInstagramUrl()).isEqualTo("https://instagram.com/account");
@@ -97,7 +94,7 @@ class OrganizationConverterTest {
 
     @Test
     void shouldFromOrganizationsToResponseSuccessfully() {
-        var response = fromOrganizationsToResponse(List.of(organization))
+        var response = organizationConverter.fromOrganizationsToResponse(List.of(organization))
                 .get(0);
 
         assertThat(response.getDescription()).isEqualTo("organization description");

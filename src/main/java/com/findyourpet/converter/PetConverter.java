@@ -1,22 +1,29 @@
 package com.findyourpet.converter;
 
-import static com.findyourpet.converter.OrganizationConverter.fromOrganizationToResponse;
-import static java.util.Collections.emptyList;
-
-import com.findyourpet.domain.Organization;
 import com.findyourpet.domain.Pet;
 import com.findyourpet.dto.request.PetRequest;
+import com.findyourpet.dto.response.ImageResponse;
+import com.findyourpet.dto.response.OrganizationResponse;
 import com.findyourpet.dto.response.PetResponse;
+import com.findyourpet.service.ImageService;
+import com.findyourpet.service.OrganizationService;
 import java.util.List;
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class PetConverter {
 
-    public static Pet fromRequest(PetRequest petRequest, Organization organization) {
+    private final OrganizationService organizationService;
+
+    private final ImageService imageService;
+
+    private final OrganizationConverter organizationConverter;
+
+    public static Pet fromRequest(PetRequest petRequest, String organizationId) {
         return Pet.builder()
-                .organization(organization)
+                .organizationId(organizationId)
                 .color(petRequest.getColor())
                 .description(petRequest.getDescription())
                 .neutered(petRequest.isNeutered())
@@ -27,11 +34,8 @@ public class PetConverter {
                 .build();
     }
 
-    public static PetResponse fromPetToResponse(Pet pet) {
-        var images = Optional.ofNullable(pet.getImages())
-                .map(ImageConverter::fromImagesToResponse)
-                .orElse(emptyList());
-
+    public PetResponse fromPetToResponse(Pet pet) {
+        var images = getImages(pet.getId());
         return PetResponse.builder()
                 .color(pet.getColor())
                 .description(pet.getDescription())
@@ -43,13 +47,24 @@ public class PetConverter {
                 .size(pet.getSize())
                 .age(pet.getAge())
                 .images(images)
-                .organizationDetails(fromOrganizationToResponse(pet.getOrganization()))
+                .organizationDetails(getOrganizationDetails(pet.getOrganizationId()))
                 .build();
     }
 
-    public static List<PetResponse> fromPetToResponse(List<Pet> pets) {
+    public List<PetResponse> fromPetToResponse(List<Pet> pets) {
         return pets.stream()
-                .map(PetConverter::fromPetToResponse)
+                .map(this::fromPetToResponse)
                 .toList();
+    }
+
+    private List<ImageResponse> getImages(String petId) {
+        return imageService.getImaqeByPet(petId).stream()
+                .map(ImageConverter::fromImagesToResponse)
+                .toList();
+    }
+
+    private OrganizationResponse getOrganizationDetails(String organizationId) {
+        var organization = organizationService.findById(organizationId);
+        return organizationConverter.fromOrganizationToResponse(organization);
     }
 }

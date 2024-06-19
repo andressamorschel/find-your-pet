@@ -7,9 +7,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 import com.findyourpet.domain.Image;
-import com.findyourpet.domain.Pet;
 import java.io.IOException;
 import java.util.List;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,24 +20,23 @@ class ImageConverterTest {
 
     @Test
     void shouldFromMultipartFileSuccessfully() throws IOException {
-        var pet = mock(Pet.class);
+        var petId = new ObjectId().toString();
         byte[] imageData = new byte[]{1, 2, 3};
         var multipartFile = mock(MultipartFile.class);
         given(multipartFile.getContentType()).willReturn("image/png");
         given(multipartFile.getOriginalFilename()).willReturn("white-cat");
         given(multipartFile.getBytes()).willReturn(imageData);
 
-        var response = fromMultipartFile(multipartFile, pet);
+        var response = fromMultipartFile(multipartFile, petId);
 
         assertThat(response.getName()).isEqualTo("white-cat");
         assertThat(response.getType()).isEqualTo("image/png");
-        assertThat(response.getPet()).isEqualTo(pet);
+        assertThat(response.getPetId()).isEqualTo(petId);
     }
 
     @Test
     void shouldFromImageToResponseSuccessfully() {
         var image = Image.builder()
-                .id(3L)
                 .name("white-cat")
                 .type("image/png")
                 .build();
@@ -51,7 +50,6 @@ class ImageConverterTest {
     @Test
     void shouldFromImagesToResponseSuccessfully() {
         var image = Image.builder()
-                .id(3L)
                 .name("white-cat")
                 .type("image/png")
                 .build();

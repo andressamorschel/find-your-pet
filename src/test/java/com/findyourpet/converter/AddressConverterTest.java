@@ -1,7 +1,5 @@
 package com.findyourpet.converter;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-
 import com.findyourpet.domain.Address;
 import com.findyourpet.dto.request.AddressRequest;
 import org.assertj.core.api.AssertionsForClassTypes;
@@ -34,7 +32,6 @@ class AddressConverterTest {
     @Test
     void shouldFromAddressToResponseSuccessfully() {
         var address = Address.builder()
-                .id(9L)
                 .number("7609")
                 .street("Av. Brasil")
                 .neighborhood("Centro")

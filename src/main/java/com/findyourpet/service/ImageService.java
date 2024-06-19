@@ -4,10 +4,11 @@ import static com.findyourpet.utils.ImageUtils.ImageUtil.decompressImage;
 
 import com.findyourpet.domain.Image;
 import com.findyourpet.exceptions.NotFoundException;
-import com.findyourpet.repository.ImageRepository;
-import jakarta.transaction.Transactional;
+import com.findyourpet.repository.pet.ImageRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,11 +22,16 @@ public class ImageService {
 
     @Transactional
     public byte[] getDecompressedImage(String name) {
-        var dbImage = getImaqe(name);
+        var dbImage = getImageByName(name);
         return decompressImage(dbImage.getImageData());
     }
 
-    private Image getImaqe(String imageName) {
+    public List<Image> getImaqeByPet(String petId) {
+        return imageRepository.findByPetId(petId);
+
+    }
+
+    private Image getImageByName(String imageName) {
         return imageRepository.findByName(imageName)
                 .orElseThrow(() -> new NotFoundException("resource_not_found", "image"));
     }
