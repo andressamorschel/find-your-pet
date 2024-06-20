@@ -1,10 +1,12 @@
 package com.findyourpet.converter;
 
+import static org.bson.BsonBinarySubType.BINARY;
+
 import com.findyourpet.domain.Image;
 import com.findyourpet.dto.response.ImageResponse;
-import com.findyourpet.utils.ImageUtils.ImageUtil;
 import java.io.IOException;
 import java.util.List;
+import org.bson.types.Binary;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,10 +15,10 @@ public class ImageConverter {
 
     public static Image fromMultipartFile(MultipartFile file, String petId) throws IOException {
         return Image.builder()
-                .name(file.getOriginalFilename())
-                .type(file.getContentType())
                 .petId(petId)
-                .imageData(ImageUtil.compressImage(file.getBytes()))
+                .type(file.getContentType())
+                .name(file.getName())
+                .imageData(new Binary(BINARY, file.getBytes()))
                 .build();
     }
 
@@ -25,6 +27,7 @@ public class ImageConverter {
                 .name(image.getName())
                 .type(image.getType())
                 .imageData(image.getImageData())
+                .id(image.getId())
                 .build();
     }
 

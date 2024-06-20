@@ -1,15 +1,14 @@
 package com.findyourpet.controller;
 
 import static com.findyourpet.converter.ImageConverter.fromMultipartFile;
-import static javax.security.auth.callback.ConfirmationCallback.OK;
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.MediaType.valueOf;
 
 import com.findyourpet.service.ImageService;
-import com.findyourpet.service.PetService;
 import java.io.IOException;
+import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,8 +25,6 @@ public class ImageController {
 
     private final ImageService imageService;
 
-    private final PetService petService;
-
     @PostMapping("/{petId}")
     @ResponseStatus(CREATED)
     public void uploadImage(@PathVariable String petId, @RequestParam("image") MultipartFile file) throws IOException {
@@ -36,12 +33,15 @@ public class ImageController {
         imageService.uploadImage(imageToSave);
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<byte[]> getImageByName(@PathVariable("name") String name) {
-        var image = imageService.getDecompressedImage(name);
+    @GetMapping("/images/{id}")
+    public ResponseEntity<Void> getPhoto(@PathVariable String id, Model model) {
+        var image = imageService.getImageById(id);
 
-        return ResponseEntity.status(OK)
-                .contentType(valueOf("image/png"))
-                .body(image);
+        model.addAttribute("title", image.getName());
+        model.addAttribute("image", Base64.getEncoder().encodeToString(image.getImageData().getData()));
+
+        return ResponseEntity.ok()
+                .build();
     }
+
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.bson.types.Binary;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Builder
@@ -17,7 +18,7 @@ public class Image extends BaseMongoEntity {
 
     private String type;
 
-    private byte[] imageData;
+    private Binary imageData;
 
     private String petId;
 }
