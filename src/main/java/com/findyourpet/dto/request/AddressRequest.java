@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddressRequest { // TODO: use zip code api
+public class AddressRequest {
 
     @NotBlank(message = "{400.001}")
     private String street;
